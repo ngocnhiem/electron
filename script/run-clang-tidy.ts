@@ -120,6 +120,7 @@ async function runClangTidy (
   const cmd = path.resolve(LLVM_BIN, 'clang-tidy');
   const args = [`-p=${outDir}`];
 
+  if (PLATFORM === 'win32') args.push('--extra-arg-before=--driver-mode=cl');
   if (!process.env.CI) args.push('--use-color');
   if (fix) args.push('--fix');
   if (checks) args.push(`--checks=${checks}`);
