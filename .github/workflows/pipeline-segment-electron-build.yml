@@ -201,7 +201,7 @@ jobs:
           e d python3 src/build/vs_toolchain.py get_toolchain_dir
 
           rm -rf src/third_party/llvm-build
-          python3 src/tools/clang/scripts/update.py
+          target_os=win python3 src/tools/clang/scripts/update.py
           # Refs https://chromium-review.googlesource.com/c/chromium/src/+/6667681
           python3 src/tools/clang/scripts/update.py --package objdump
         fi
