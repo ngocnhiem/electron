@@ -83,8 +83,12 @@ runs:
       shell: bash
       run: |
         cd src
+        echo "ABOUT TO DUMP GN ARGS"
         cat out/Default/args.gn
+        echo "DONE DUMPING GN ARGS"
+        echo "ABOUT TO LIST GN ARGS"
         e d gn args out/Default --list
+        echo "DONE LISTING GN ARGS"
     - name: Verify dist.zip ${{ inputs.step-suffix }}
       shell: bash
       run: |

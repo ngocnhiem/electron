@@ -184,10 +184,11 @@ jobs:
     - name: Init Build Tools
       run: |
         e init -f --root=$(pwd) --out=Default ${{ inputs.gn-build-type }} --import ${{ inputs.gn-build-type }} --target-cpu ${{ inputs.target-arch }} --remote-build siso
+        e sanitize-config
     - name: Run Electron Only Hooks
       run: |
         echo "solutions=[{'name':'src/electron','url':None,'deps_file':'DEPS','custom_vars':{'process_deps':False},'managed':False}]" > tmpgclient
-        if [ "${{ inputs.target-platform }}" = "windows" ]; then
+        if [ "${{ inputs.target-platform }}" = "win" ]; then
           echo "solutions=[{'name':'src/electron','url':None,'deps_file':'DEPS','custom_vars':{'process_deps':False,'install_sysroot':False,'checkout_win':True},'managed':False}]" > tmpgclient
           echo "target_os=['win']" >> tmpgclient
         fi
@@ -196,6 +197,8 @@ jobs:
         if [ "${{ inputs.target-platform }}" = "win" ]; then
           rm -rf src/third_party/depot_tools/win_toolchain/vs_files
           e d python3 src/build/vs_toolchain.py update --force
+          echo "GETTING TOOLCHAIN DIR"
+          e d python3 src/build/vs_toolchain.py get_toolchain_dir
         fi
     - name: Regenerate DEPS Hash
       run: |
