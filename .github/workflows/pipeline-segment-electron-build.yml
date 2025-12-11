@@ -186,13 +186,8 @@ jobs:
         e init -f --root=$(pwd) --out=Default ${{ inputs.gn-build-type }} --import ${{ inputs.gn-build-type }} --target-cpu ${{ inputs.target-arch }} --remote-build siso
         e sanitize-config
     - name: Run Electron Only Hooks
-      run: |
-        echo "solutions=[{'name':'src/electron','url':None,'deps_file':'DEPS','custom_vars':{'process_deps':False},'managed':False}]" > tmpgclient
-        if [ "${{ inputs.target-platform }}" = "win" ]; then
-          echo "solutions=[{'name':'src/electron','url':None,'deps_file':'DEPS','custom_vars':{'process_deps':False,'install_sysroot':False,'checkout_win':True},'managed':False}]" > tmpgclient
-          echo "target_os=['win']" >> tmpgclient
-        fi
-        e d gclient runhooks --gclientfile=tmpgclient
+      run: |        
+        e d gclient runhooks --spec="solutions=[{'name':'src/electron','url':None,'deps_file':'DEPS','custom_vars':{'process_deps':False},'managed':False}]"        
         # Fix VS Toolchain
         if [ "${{ inputs.target-platform }}" = "win" ]; then
           rm -rf src/third_party/depot_tools/win_toolchain/vs_files
