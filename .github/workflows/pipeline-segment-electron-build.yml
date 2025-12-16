@@ -203,10 +203,9 @@ jobs:
         if [ "${{ inputs.target-platform }}" = "win" ]; then
           echo "Windows platform detected, listing VS files after gclient runhooks"
           ls -la src/third_party/depot_tools/win_toolchain/vs_files
-          ls -la src/third_party/depot_tools/win_toolchain/vs_files/*
-
-          #rm -rf src/third_party/depot_tools/win_toolchain/vs_files
-          #e d python3 src/build/vs_toolchain.py update --force
+          ls -la src/third_party/depot_tools/win_toolchain/*
+          rm -rf src/third_party/depot_tools/win_toolchain/vs_files
+          e d python3 src/build/vs_toolchain.py update --force          
           echo "GETTING TOOLCHAIN DIR"
           e d python3 src/build/vs_toolchain.py get_toolchain_dir
         fi
