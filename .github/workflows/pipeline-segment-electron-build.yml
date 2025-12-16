@@ -186,29 +186,29 @@ jobs:
         e init -f --root=$(pwd) --out=Default ${{ inputs.gn-build-type }} --import ${{ inputs.gn-build-type }} --target-cpu ${{ inputs.target-arch }} --remote-build siso
         e sanitize-config
     - name: Run Electron Only Hooks
-      run: |        
-        e d gclient runhooks --spec="solutions=[{'name':'src/electron','url':None,'deps_file':'DEPS','custom_vars':{'process_deps':False},'managed':False}]"        
+      run: |
+        if [ "${{ inputs.target-platform }}" = "win" ]; then
+          echo "Windows platform detected, listing VS files before gclient runhooks"
+          ls -la src/third_party/depot_tools/win_toolchain/vs_files
+          ls -la src/third_party/depot_tools/win_toolchain/vs_files/*
+        fi
+        echo "solutions=[{'name':'src/electron','url':None,'deps_file':'DEPS','custom_vars':{'process_deps':False},'managed':False}]" > tmpgclient
+        if [ "${{ inputs.target-platform }}" = "windows" ]; then
+          echo "solutions=[{'name':'src/electron','url':None,'deps_file':'DEPS','custom_vars':{'process_deps':False,'install_sysroot':False,'checkout_win':True},'managed':False}]" > tmpgclient
+          echo "target_os=['win']" >> tmpgclient
+        fi
+        gclient runhooks --gclientfile=tmpgclient
+        
         # Fix VS Toolchain
         if [ "${{ inputs.target-platform }}" = "win" ]; then
-          rm -rf src/third_party/depot_tools/win_toolchain/vs_files
-          e d python3 src/build/vs_toolchain.py update --force
+          echo "Windows platform detected, listing VS files after gclient runhooks"
+          ls -la src/third_party/depot_tools/win_toolchain/vs_files
+          ls -la src/third_party/depot_tools/win_toolchain/vs_files/*
+
+          #rm -rf src/third_party/depot_tools/win_toolchain/vs_files
+          #e d python3 src/build/vs_toolchain.py update --force
           echo "GETTING TOOLCHAIN DIR"
           e d python3 src/build/vs_toolchain.py get_toolchain_dir
-
-          # List the contents of src/third_party/llvm-build/Release+Asserts/lib/clang/22 if it exists
-          if [ -d "src/third_party/llvm-build/Release+Asserts/lib/clang/22" ]; then
-            echo "Contents of src/third_party/llvm-build/Release+Asserts/lib/clang/22:"
-            ls -la src/third_party/llvm-build/Release+Asserts/lib/clang/22
-            # List the contents of src/third_party/llvm-build/Release+Asserts/lib/clang/22/lib/windows if it exists
-            if [ -d "src/third_party/llvm-build/Release+Asserts/lib/clang/22/lib/windows" ]; then
-              echo "Contents of src/third_party/llvm-build/Release+Asserts/lib/clang/22/lib/windows:"
-              ls -la src/third_party/llvm-build/Release+Asserts/lib/clang/22/lib/windows    
-            else
-              echo "Directory src/third_party/llvm-build/Release+Asserts/lib/clang/22/lib/windows does not exist."
-            fi
-          else
-            echo "Directory src/third_party/llvm-build/Release+Asserts/lib/clang/22 does not exist."
-          fi
         fi
     - name: Regenerate DEPS Hash
       run: |
