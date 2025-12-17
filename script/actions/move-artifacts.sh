@@ -10,7 +10,7 @@ elif [ "`uname`" == "Darwin" ]; then
   fi
 elif [ "`uname`" == "Linux" ]; then
   if [ "$ELECTRON_DEPOT_TOOLS_WIN_TOOLCHAIN" == "1" ]; then
-    BUILD_TYPE="windows"
+    BUILD_TYPE="win"
   else
     BUILD_TYPE="linux"
   fi
