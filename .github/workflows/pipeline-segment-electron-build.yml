@@ -214,6 +214,8 @@ jobs:
           e d python3 src/build/vs_toolchain.py update --force          
           echo "GETTING TOOLCHAIN DIR"
           e d python3 src/build/vs_toolchain.py get_toolchain_dir
+          ls -la third_party/depot_tools/win_toolchain/vs_files/efe71370d5
+          e sync
         fi
     - name: Regenerate DEPS Hash
       run: |
