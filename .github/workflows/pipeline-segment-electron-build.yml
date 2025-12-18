@@ -205,17 +205,6 @@ jobs:
           echo "target_os=['win']" >> tmpgclient
         fi
         gclient runhooks --gclientfile=tmpgclient
-        
-        # Fix VS Toolchain
-        if [ "${{ inputs.target-platform }}" = "win" ]; then
-          echo "Windows platform detected, listing VS files after gclient runhooks"
-          ls -la src/third_party/depot_tools/win_toolchain/vs_files/efe71370d5
-          rm -rf src/third_party/depot_tools/win_toolchain/vs_files
-          e d python3 src/build/vs_toolchain.py update --force          
-          echo "GETTING TOOLCHAIN DIR"
-          e d python3 src/build/vs_toolchain.py get_toolchain_dir
-          ls -la src/third_party/depot_tools/win_toolchain/vs_files/efe71370d5
-        fi
     - name: Regenerate DEPS Hash
       run: |
         (cd src/electron && git checkout .) && node src/electron/script/generate-deps-hash.js
