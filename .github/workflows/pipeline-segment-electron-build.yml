@@ -200,8 +200,7 @@ jobs:
 
         fi
         echo "solutions=[{'name':'src/electron','url':None,'deps_file':'DEPS','custom_vars':{'process_deps':False},'managed':False}]" > tmpgclient
-        if [ "${{ inputs.target-platform }}" = "win" ]; then
-          echo "solutions=[{'name':'src/electron','url':None,'deps_file':'DEPS','custom_vars':{'process_deps':False,'install_sysroot':False,'checkout_win':True},'managed':False}]" > tmpgclient
+        if [ "${{ inputs.target-platform }}" = "win" ]; then          
           echo "target_os=['win']" >> tmpgclient
         fi
         gclient runhooks --gclientfile=tmpgclient
